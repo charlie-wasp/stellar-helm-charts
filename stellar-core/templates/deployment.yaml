@@ -40,7 +40,7 @@ spec:
         - name: {{ .Chart.Name }}-catchup
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}{{ with .Values.image.flavor }}-{{.}}{{ end }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          args: ["stellar-core", "catchup", '{{ printf "%.0f" .Values.initCatchup.ledger }}', "--conf", "/stellar-core.cfg"]
+          args: ["stellar-core", "catchup", '{{ .Values.initCatchup.ledger }}', "--conf", "/stellar-core.cfg"]
           env:
             {{ include "stellar-core.env" . | indent 12 }}
           volumeMounts:
