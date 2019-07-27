@@ -37,6 +37,18 @@ spec:
               subPath: {{ .Values.persistence.subPath }}
         {{- end }}
         {{- if .Values.initCatchup.enabled }}
+        {{- if .Values.initCatchup.newDb }}        
+        - name: {{ .Chart.Name }}-new-db
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}{{ with .Values.image.flavor }}-{{.}}{{ end }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: ["stellar-core", "new-db", "--conf", "/stellar-core.cfg"]
+          env:
+            {{ include "stellar-core.env" . | indent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: {{ .Values.persistence.mountPath }}
+              subPath: {{ .Values.persistence.subPath }}
+        {{- end }}
         - name: {{ .Chart.Name }}-catchup
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}{{ with .Values.image.flavor }}-{{.}}{{ end }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
